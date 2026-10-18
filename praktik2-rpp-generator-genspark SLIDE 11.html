@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Praktik 2 · AI Lesson Plan Generator</title>
+<style>
+  :root {
+    --navy: #14284b;
+    --gold: #c9a227;
+    --paper: #fbf8ef;
+    --ink: #1d2433;
+    --muted: #5b6475;
+    --line: #e3dcc6;
+    --warn-bg: #fff4d6;
+    --ok: #1c6b3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    font-size: 15px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 14px 14px 22px; }
+  header {
+    background: var(--navy);
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    border-bottom: 4px solid var(--gold);
+  }
+  header small { color: var(--gold); letter-spacing: .08em; font-weight: 600; }
+  header h1 { margin: 2px 0 0; font-size: 18px; }
+
+  .steps { margin: 14px 0 10px; padding-left: 20px; }
+  .steps li { margin-bottom: 4px; }
+
+  .box {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .box h2 { margin: 0 0 6px; font-size: 15px; color: var(--navy); }
+  .hint { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; }
+  .grid .full { grid-column: 1 / -1; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  input, select, textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: #fffdf6;
+  }
+  textarea { min-height: 190px; resize: vertical; }
+  input:focus, select:focus, textarea:focus, button:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--gold); outline-offset: 1px;
+  }
+
+  button, .btn {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 8px;
+  }
+  button:hover, .btn:hover { background: #1d3a6e; }
+  .btn.gold { background: var(--gold); color: #14284b; }
+  .btn.gold:hover { background: #b8921f; }
+  #status { margin-left: 10px; color: var(--ok); font-weight: 600; font-size: 14px; }
+
+  .launch { border: 1px dashed var(--gold); text-align: center; padding: 16px 14px; }
+  .launch p { margin: 0 0 4px; }
+  .launch .btn { margin-top: 6px; font-size: 16px; padding: 11px 20px; }
+  .launch small { display: block; margin-top: 8px; color: var(--muted); }
+
+  .warn {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--gold);
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 14px;
+    margin-top: 12px;
+  }
+  .fallback { margin-top: 12px; font-size: 14px; color: var(--muted); }
+
+  .nav { margin: 14px 0 0; }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <small>PRAKTIK 2</small>
+    <h1>Merancang Pembelajaran dengan Siklus SRL</h1>
+  </header>
+
+  <ol class="steps">
+    <li>Isi data kelas Anda pada kolom di bawah. Prompt akan tersusun otomatis.</li>
+    <li>Tekan <strong>Salin prompt RPP</strong>, lalu buka <strong>Genspark</strong> dan tempel prompt pada kotak percakapan.</li>
+    <li>Baca hasilnya, sesuaikan dengan kelas Anda, lalu simpan draf RPP ke berkas Anda.</li>
+  </ol>
+
+  <!-- ===== 1. DATA KELAS ===== -->
+  <div class="box">
+    <h2>1. Data kelas Anda</h2>
+    <div class="grid">
+      <div class="full">
+        <label for="tema">Mata pelajaran / tema</label>
+        <input id="tema" type="text" placeholder="contoh: Matematika dasar (jual beli)">
+      </div>
+      <div>
+        <label for="program">Program</label>
+        <select id="program">
+          <option>Paket A</option>
+          <option selected>Paket B</option>
+          <option>Paket C</option>
+          <option>Keterampilan</option>
+        </select>
+      </div>
+      <div>
+        <label for="durasi">Durasi (menit)</label>
+        <input id="durasi" type="number" min="15" step="5" value="90">
+      </div>
+      <div>
+        <label for="jumlah">Jumlah murid</label>
+        <input id="jumlah" type="number" min="1" value="15">
+      </div>
+      <div>
+        <label for="lokal">Potensi lokal</label>
+        <input id="lokal" type="text" placeholder="contoh: pasar, bengkel, sawah">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. PROMPT ===== -->
+  <div class="box">
+    <h2>2. Prompt RPP siap tempel (SRL Zimmerman + potensi lokal)</h2>
+    <p class="hint">Bagian yang masih berupa [ ] belum Anda isi. Anda juga boleh menyunting teks ini langsung.</p>
+    <textarea id="prompt" spellcheck="false"></textarea>
+    <button type="button" id="salin">Salin prompt RPP</button><span id="status" role="status" aria-live="polite"></span>
+  </div>
+
+  <!-- ===== 3. GENSPARK ===== -->
+  <div class="box launch">
+    <h2>3. Buka AI Lesson Plan Generator</h2>
+    <p>Tempel prompt pada kotak percakapan di Genspark.</p>
+    <a class="btn gold" href="https://www.genspark.ai/id" target="_blank" rel="noopener">Buka Genspark di tab baru</a>
+    <small>Genspark mungkin meminta Anda masuk (login). Setelah selesai, kembali ke e-book lalu tekan <em>Lanjut ke Rangkuman</em>.</small>
+  </div>
+
+  <div class="warn">
+    <strong>Ingat:</strong> hasil AI adalah bahan rancangan, bukan keputusan final. Jangan memasukkan data pribadi murid atau data sensitif ke generator.
+  </div>
+
+  <p class="nav"><a class="btn" href="praktik1-refleksi-genspark.html">Kembali ke Praktik 1: Refleksi Mandiri</a></p>
+
+  <p class="fallback">
+    Tombol di atas tidak terbuka? Salin alamat ini ke peramban Anda: <strong>www.genspark.ai/id</strong>
+  </p>
+
+</div>
+
+<script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    var area = $('prompt');
+    var status = $('status');
+    var edited = false;
+
+    function isi(v, placeholder) {
+      v = (v || '').trim();
+      return v ? v : '[' + placeholder + ']';
+    }
+
+    function susun() {
+      var teks =
+        'Buatkan rencana pembelajaran untuk ' + isi($('tema').value, 'mata pelajaran/tema') +
+        ', program ' + $('program').value +
+        ', durasi ' + isi($('durasi').value, 'x') + ' menit, ' +
+        isi($('jumlah').value, 'jumlah') + ' murid dewasa dengan beragam usia dan pekerjaan. ' +
+        'Gunakan siklus Self-Regulated Learning Zimmerman: Perencanaan (target realistis), ' +
+        'Pemantauan (cek strategi saat berlangsung), dan Refleksi (jurnal belajar). ' +
+        'Manfaatkan potensi lokal: ' + isi($('lokal').value, 'pasar/bengkel/sawah/lainnya') + '. ' +
+        'Sertakan kegiatan membangun rasa aman dan hubungan untuk belajar, jeda singkat, dan penilaian sederhana.\n\n' +
+        'Catatan tambahan: peserta adalah pendidikan nonformal (PNF), hindari asumsi kelas anak-anak. ' +
+        'Perangkat terbatas, tanpa laptop. Tulis dalam Bahasa Indonesia ' +
+        'dalam format tabel yang mudah disalin (tujuan, kegiatan per tahap SRL, waktu, penilaian).';
+      area.value = teks;
+    }
+
+    ['tema', 'program', 'durasi', 'jumlah', 'lokal'].forEach(function (id) {
+      $(id).addEventListener('input', function () {
+        if (!edited) susun();
+      });
+    });
+    area.addEventListener('input', function () { edited = true; });
+    susun();
+
+    function tampil(pesan) {
+      status.textContent = pesan;
+      setTimeout(function () { status.textContent = ''; }, 3500);
+    }
+
+    function cadangan() {
+      area.focus();
+      area.select();
+      try {
+        var ok = document.execCommand('copy');
+        tampil(ok ? 'Tersalin.' : 'Teks terpilih. Tekan Salin pada menu (Ctrl+C).');
+      } catch (e) {
+        tampil('Teks terpilih. Tekan Salin pada menu (Ctrl+C).');
+      }
+    }
+
+    $('salin').addEventListener('click', function () {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(area.value).then(
+          function () { tampil('Tersalin.'); },
+          cadangan
+        );
+      } else {
+        cadangan();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
